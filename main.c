@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <Windows.h>
+#include <mmsystem.h>
 
 typedef enum {
 	DIR_UP,
@@ -11,7 +12,8 @@ typedef enum {
 
 typedef enum {
 	BG_GRASS,
-	BG_SAND
+	BG_SAND,
+	BG_CONCRETE
 } TankBackground;
 
 typedef struct {
@@ -21,6 +23,8 @@ typedef struct {
 	TankBackground bg;
 } Tank;
 
+void drawTopUI(HANDLE stdOutHandle, int time);
+
 void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg);
 
 int main() {
@@ -29,7 +33,7 @@ int main() {
 	SetConsoleOutputCP(CP_UTF8);
 	
 	TankDirection tDir = DIR_UP;
-	TankBackground tBg = BG_GRASS;
+	TankBackground tBg = BG_CONCRETE;
 
 	Tank player = {
 		.posX = 12,
@@ -38,29 +42,36 @@ int main() {
 		.bg = tBg
 	};
 
-	int spawned = 1;
-
 	system("cls");
 	SetConsoleTextAttribute(stdHandle, 0x07);
 	printf("Use o zoom para uma melhor experiência");
 	Sleep(2000);
 	system("cls");
 
-	while (1) {
+
+	int quarter_second_counter = 0;
+	int seconds = 0;
+
+	PlaySound("audio/music.wav", NULL, SND_FILENAME | SND_ASYNC);
+
+	for (int game_ticks = 0; game_ticks < 1000; game_ticks++) {
 		COORD redrawPosition = {0,0};
 		SetConsoleCursorPosition(stdHandle, redrawPosition);
 
 		int i = 0;
 		int j = 0;
 
+
+		drawTopUI(stdHandle, seconds);
+
 		for (i; i < 10; i++) {
 			for (j = 0; j < 25; j++) {
-				SetConsoleTextAttribute(stdHandle, 0x2A);
-
+				SetConsoleTextAttribute(stdHandle, 0x87);
+				
 				if (i == player.posY && j == player.posX) {
 					drawTank(stdHandle, tDir, tBg);
 				} else {
-					printf(",");
+					printf(" ");
 				}
 			}
 			SetConsoleTextAttribute(stdHandle, 0x07);
@@ -76,12 +87,11 @@ int main() {
 			if (player.posY >= 1) {
 				player.posY--;
 				tDir = DIR_UP;
-				spawned = 0;
 			}
 		}
 
 		if ((GetAsyncKeyState(VK_DOWN) & 0b1) || (GetAsyncKeyState('S') & 0b1)) {
-			if (player.posY <= 8 && spawned != 1) {
+			if (player.posY <= 8) {
 				player.posY++;
 				tDir = DIR_DOWN;
 			}
@@ -95,21 +105,72 @@ int main() {
 		}
 
 		if ((GetAsyncKeyState(VK_RIGHT) & 0b1) || (GetAsyncKeyState('D') & 0b1)) {
-			if (player.posY <= 24 && spawned != 1) {
+			if (player.posX <= 23) {
 				player.posX++;
 				tDir = DIR_RIGHT;
 			}
 		}
 
+		quarter_second_counter++;
+
+		if (quarter_second_counter > 4) {
+			quarter_second_counter = 0;
+			seconds++;
+		}
+
 		Sleep(150);
 	}
+
 	return 0;
+}
+
+void drawTopUI(HANDLE stdOutHandle, int time) {
+		SetConsoleTextAttribute(stdOutHandle, 0x07);
+
+		printf("+");
+		for (int i = 0; i < 23; i++) {
+			printf("-");
+		}	
+		printf("+\n");
+
+		printf("|");
+		for (int i = 0; i < 23; i++) {
+			printf(" ");
+		}
+		printf("|\n");
+
+		printf("|");
+		for (int i = 0; i < 23; i++) {
+			printf(" ");
+		}
+		printf("|\n");
+
+		printf("|");
+		for (int i = 0; i < 6; i++) {
+			printf(" ");
+		}	
+
+		printf("Time: %.4d", time);
+
+		for (int i = 0; i < 7; i++) {
+			printf(" ");
+		}	
+		printf("|\n");
+
+		printf("+");
+		for (int i = 0; i < 23; i++) {
+			printf("-");
+		}
+		printf("+\n");
 }
 
 void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg) {
 	switch (tBg) {
 		case 1:
 			SetConsoleTextAttribute(stdOutHandle, 0x67);
+			break;
+		case 2:
+			SetConsoleTextAttribute(stdOutHandle, 0x87);
 			break;
 		default:
 			SetConsoleTextAttribute(stdOutHandle, 0x27);

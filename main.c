@@ -4,6 +4,20 @@
 #include <mmsystem.h>
 
 typedef enum {
+	CONTINUE,
+	EXIT
+} MovementReturnCode;
+
+typedef enum {
+	SECTION_ZERO,
+	SECTION_ONE,
+	SECTION_TWO,
+	SECTION_THREE,
+	SECTION_FOUR,
+	EXIT_GAME
+} SectionID;
+
+typedef enum {
 	DIR_UP,
 	DIR_LEFT,
 	DIR_RIGHT,
@@ -21,106 +35,47 @@ typedef struct {
 	int posY;
 	TankDirection dir;
 	TankBackground bg;
+	SectionID sectionID;
 } Tank;
 
 void drawTopUI(HANDLE stdOutHandle, int time);
-
 void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg);
+MovementReturnCode movement(Tank *player, int maxX, int minX, int maxY, int minY);
+
+void sectionZero(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
 
 int main() {
-	HANDLE stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	SetConsoleOutputCP(CP_UTF8);
 	
-	TankDirection tDir = DIR_UP;
-	TankBackground tBg = BG_CONCRETE;
-
 	Tank player = {
 		.posX = 12,
 		.posY = 9,
-		.dir = tDir,
-		.bg = tBg
+		.dir = DIR_UP,
+		.bg = BG_CONCRETE,
+		.sectionID = SECTION_ZERO,
 	};
 
 	system("cls");
-	SetConsoleTextAttribute(stdHandle, 0x07);
+	SetConsoleTextAttribute(stdOutHandle, 0x07);
 	printf("Use o zoom para uma melhor experiência");
 	Sleep(2000);
 	system("cls");
 
 
-	int quarter_second_counter = 0;
+	int quarterSecondCounter = 0;
 	int seconds = 0;
 
 	PlaySound("audio/music.wav", NULL, SND_FILENAME | SND_ASYNC);
 
-	for (int game_ticks = 0; game_ticks < 1000; game_ticks++) {
-		COORD redrawPosition = {0,0};
-		SetConsoleCursorPosition(stdHandle, redrawPosition);
-
-		int i = 0;
-		int j = 0;
-
-
-		drawTopUI(stdHandle, seconds);
-
-		for (i; i < 10; i++) {
-			for (j = 0; j < 25; j++) {
-				SetConsoleTextAttribute(stdHandle, 0x87);
-				
-				if (i == player.posY && j == player.posX) {
-					drawTank(stdHandle, tDir, tBg);
-				} else {
-					printf(" ");
-				}
-			}
-			SetConsoleTextAttribute(stdHandle, 0x07);
-			printf("\n");
-		}
-		
-	
-		if (GetAsyncKeyState('Q') & 0b1) {
+	switch (player.sectionID) {
+		case SECTION_ZERO:
+			sectionZero(&player, stdOutHandle, &quarterSecondCounter, &seconds);
 			break;
-		}
-		
-		if ((GetAsyncKeyState(VK_UP) & 0b1) || (GetAsyncKeyState('W') & 0b1)) {
-			if (player.posY >= 1) {
-				player.posY--;
-				tDir = DIR_UP;
-			}
-		}
-
-		if ((GetAsyncKeyState(VK_DOWN) & 0b1) || (GetAsyncKeyState('S') & 0b1)) {
-			if (player.posY <= 8) {
-				player.posY++;
-				tDir = DIR_DOWN;
-			}
-		}
-
-		if ((GetAsyncKeyState(VK_LEFT) & 0b1) || (GetAsyncKeyState('A') & 0b1)) {
-			if (player.posX >= 1) {
-				player.posX--;
-				tDir = DIR_LEFT;
-			}
-		}
-
-		if ((GetAsyncKeyState(VK_RIGHT) & 0b1) || (GetAsyncKeyState('D') & 0b1)) {
-			if (player.posX <= 23) {
-				player.posX++;
-				tDir = DIR_RIGHT;
-			}
-		}
-
-		quarter_second_counter++;
-
-		if (quarter_second_counter > 4) {
-			quarter_second_counter = 0;
-			seconds++;
-		}
-
-		Sleep(150);
 	}
 
+	printf("%d", seconds);
 	return 0;
 }
 
@@ -189,5 +144,85 @@ void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg) {
 		default:
 			printf("^");
 			break;
+	}
+}
+
+void sectionZero(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds) {
+	for (*quarterSecondCounter; *quarterSecondCounter < 1000; *quarterSecondCounter += 1) {
+		COORD redrawPosition = {0,0};
+		SetConsoleCursorPosition(stdOutHandle, redrawPosition);
+
+		int i = 0;
+		int j = 0;
+
+
+		drawTopUI(stdOutHandle, *seconds);
+
+		for (i; i < 10; i++) {
+			for (j = 0; j < 25; j++) {
+				SetConsoleTextAttribute(stdOutHandle, 0x87);
+				
+				if (i == player->posY && j == player->posX) {
+					drawTank(stdOutHandle, player->dir, player->bg);
+				} else {
+					printf(" ");
+				}
+			}
+			SetConsoleTextAttribute(stdOutHandle, 0x07);
+			printf("\n");
+		}
+
+		if (*quarterSecondCounter > 4) {
+			*quarterSecondCounter = 0;
+			*seconds += 1;
+		}
+
+		MovementReturnCode mrc = movement(player, 1, 24, 8, -2);
+
+		Sleep(150);
+
+		if (mrc == EXIT) {
+			player->sectionID = EXIT_GAME;
+			break;
+		}
+
+		if (player->posY == -2) {
+			player->sectionID = SECTION_TWO;
+			break;
+		}
+	}
+}
+
+MovementReturnCode movement(Tank *player, int maxX, int minX, int maxY, int minY) {
+	if (GetAsyncKeyState('Q') & 0b1) {
+		return EXIT;
+	}
+		
+	if ((GetAsyncKeyState(VK_UP) & 0b1) || (GetAsyncKeyState('W') & 0b1)) {
+		if (player->posY >= minY) {
+			player->posY--;
+			player->dir = DIR_UP;
+			}
+	}
+
+	if ((GetAsyncKeyState(VK_DOWN) & 0b1) || (GetAsyncKeyState('S') & 0b1)) {
+		if (player->posY <= maxY) {
+			player->posY++;
+			player->dir = DIR_DOWN;
+		}
+	}
+
+	if ((GetAsyncKeyState(VK_LEFT) & 0b1) || (GetAsyncKeyState('A') & 0b1)) {
+		if (player->posX >= maxX) {
+			player->posX--;
+			player->dir = DIR_LEFT;
+		}
+	}
+
+	if ((GetAsyncKeyState(VK_RIGHT) & 0b1) || (GetAsyncKeyState('D') & 0b1)) {
+		if (player->posX <= minX) {
+			player->posX++;
+			player->dir = DIR_RIGHT;
+		}
 	}
 }

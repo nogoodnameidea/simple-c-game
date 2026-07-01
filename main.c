@@ -6,6 +6,12 @@
 #define X_LOOP for (j = 0; j < 25; j++)
 #define Y_LOOP for (i; i < 10; i++)
 
+#define QUIT_GAME_KEY_PRESSED GetAsyncKeyState('Q') & 0b1
+#define MOVE_UP_KEY_PRESSED (GetAsyncKeyState(VK_UP) & 0b1) || (GetAsyncKeyState('W') & 0b1)
+#define MOVE_DOWN_KEY_PRESSED (GetAsyncKeyState(VK_DOWN) & 0b1) || (GetAsyncKeyState('S') & 0b1)
+#define MOVE_LEFT_KEY_PRESSED (GetAsyncKeyState(VK_LEFT) & 0b1) || (GetAsyncKeyState('A') & 0b1)
+#define MOVE_RIGHT_KEY_PRESSED (GetAsyncKeyState(VK_RIGHT) & 0b1) || (GetAsyncKeyState('D') & 0b1)
+
 typedef enum {
 	CONTINUE,
 	EXIT
@@ -43,12 +49,15 @@ typedef struct {
 
 void drawTopUI(HANDLE stdOutHandle, int time);
 void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg);
-void drawMap(HANDLE stdOutHandle, int posX, int posY, Tank *player, int bgColor, char *tileCharacter);
+void drawMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor, char *tileCharacter);
+void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor, int waterLevel, char *tileCharacter);
 
 MovementReturnCode movement(Tank *player, int maxX, int minX, int maxY, int minY);
+MovementReturnCode beachMovement(Tank *player, int maxX, int minX, int maxY, int minY);
 
 void sectionOne(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
 void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
+void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
 
 int main() {
 	HANDLE stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -79,7 +88,10 @@ int main() {
 			case SECTION_TWO:
 				sectionTwo(&player, stdOutHandle, &quarterSecondCounter, &seconds);
 				break;
-			case EXIT_GAME:
+			case SECTION_THREE:
+				sectionThree(&player, stdOutHandle, &quarterSecondCounter, &seconds);
+				break;
+			default:
 				isRunning = 0;
 				break;
 		}
@@ -156,43 +168,92 @@ void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg) {
 	}
 }
 
-void drawMap(HANDLE stdOutHandle, int posX, int posY, Tank *player, int bgColor, char *tileCharacter) {
+void drawMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor, char *tileCharacter) {
 	SetConsoleTextAttribute(stdOutHandle, bgColor);
 				
-	if (posX == player->posY && posY == player->posX) {
+	if (mapPosX == player->posY && mapPosY == player->posX) {
 		drawTank(stdOutHandle, player->dir, player->bg);
 	} else {
 		printf("%s", tileCharacter);
 	}
 }
 
+void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor, int waterLevel, char *tileCharacter) {
+	SetConsoleTextAttribute(stdOutHandle, bgColor);
+
+	int waterLeveLimit = 11;
+
+	if (mapPosX == player->posY && mapPosY == player->posX) {
+		drawTank(stdOutHandle, player->dir, player->bg);
+	} else if (waterLevel < waterLeveLimit) {
+		SetConsoleTextAttribute(stdOutHandle, 0x19);
+		printf("~");
+	} else { 
+		printf("%s", tileCharacter); 
+	}
+}
+
 MovementReturnCode movement(Tank *player, int maxX, int minX, int maxY, int minY) {
-	if (GetAsyncKeyState('Q') & 0b1) {
+	if (QUIT_GAME_KEY_PRESSED) {
 		return EXIT;
 	}
 		
-	if ((GetAsyncKeyState(VK_UP) & 0b1) || (GetAsyncKeyState('W') & 0b1)) {
+	if (MOVE_UP_KEY_PRESSED) {
 		if (player->posY >= minY) {
 			player->posY--;
 			player->dir = DIR_UP;
-			}
+		}
 	}
 
-	if ((GetAsyncKeyState(VK_DOWN) & 0b1) || (GetAsyncKeyState('S') & 0b1)) {
+	if (MOVE_DOWN_KEY_PRESSED) {
 		if (player->posY <= maxY) {
 			player->posY++;
 			player->dir = DIR_DOWN;
 		}
 	}
 
-	if ((GetAsyncKeyState(VK_LEFT) & 0b1) || (GetAsyncKeyState('A') & 0b1)) {
+	if (MOVE_LEFT_KEY_PRESSED) {
 		if (player->posX >= maxX) {
 			player->posX--;
 			player->dir = DIR_LEFT;
 		}
 	}
 
-	if ((GetAsyncKeyState(VK_RIGHT) & 0b1) || (GetAsyncKeyState('D') & 0b1)) {
+	if (MOVE_RIGHT_KEY_PRESSED) {
+		if (player->posX <= minX) {
+			player->posX++;
+			player->dir = DIR_RIGHT;
+		}
+	}
+}
+
+MovementReturnCode beachMovement(Tank *player, int maxX, int minX, int maxY, int minY){
+	if (QUIT_GAME_KEY_PRESSED) {
+		return EXIT;
+	}
+		
+	if (MOVE_UP_KEY_PRESSED) {
+		if (player->posY >= minY) {
+			player->posY--;
+			player->dir = DIR_UP;
+		}
+	}
+
+	if (MOVE_DOWN_KEY_PRESSED) {
+		if (player->posY <= maxY) {
+			player->posY++;
+			player->dir = DIR_DOWN;
+		}
+	}
+
+	if ((MOVE_LEFT_KEY_PRESSED) && (player->posX >= 12)) {
+		if (player->posX >= maxX) {
+			player->posX--;
+			player->dir = DIR_LEFT;
+		}
+	}
+
+	if ((MOVE_RIGHT_KEY_PRESSED)) {
 		if (player->posX <= minX) {
 			player->posX++;
 			player->dir = DIR_RIGHT;
@@ -207,7 +268,6 @@ void sectionOne(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 
 		int i = 0;
 		int j = 0;
-
 
 		drawTopUI(stdOutHandle, *seconds);
 
@@ -254,7 +314,7 @@ void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 		drawTopUI(stdOutHandle, *seconds);
 
 		Y_LOOP {
-			X_LOOP {
+			X_LOOP {	
 				drawMap(stdOutHandle, i, j, player, 0x2A, ",");
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
@@ -266,7 +326,7 @@ void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 			*seconds += 1;
 		}
 
-		MovementReturnCode mrc = movement(player, 1, 24, 8, -2);
+		MovementReturnCode mrc = movement(player, 0, 25, 10, -2);
 
 		Sleep(150);
 
@@ -275,8 +335,67 @@ void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 			break;
 		}
 
-		if (player->posY == -2) {
+		if (player->posX <= -1) {
 			player->sectionID = SECTION_THREE;
+			player->posX = 24;
+			player->bg = BG_SAND;
+			break;
+		} 
+
+		if (player->posY <= -1) {
+			player->sectionID = SECTION_FIVE;
+			break;
+			
+		} else if (player->posY >= 10) {
+			player->sectionID = SECTION_ONE;
+			player->posY = 0;
+			player->bg = BG_CONCRETE;
+			break;
+		}
+	}
+}
+
+void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds) {
+	GAME_CLOCK_LOOP {
+		COORD redrawPosition = {0,0};
+		SetConsoleCursorPosition(stdOutHandle, redrawPosition);
+
+		int i = 0;
+		int j = 0;
+
+		int waterLevel = 0;
+
+		drawTopUI(stdOutHandle, *seconds);
+
+		Y_LOOP {
+			X_LOOP {
+				drawBeachMap(stdOutHandle, i, j, player, 0x67, waterLevel, ".");
+				waterLevel++;
+			}
+			SetConsoleTextAttribute(stdOutHandle, 0x07);
+			printf("\n");
+			
+			waterLevel = 0;
+		}
+
+		if (*quarterSecondCounter > 4) {
+			*quarterSecondCounter = 0;
+			*seconds += 1;
+		}
+
+		MovementReturnCode beachMrc = beachMovement(player, 1, 25, 8, -1);
+
+		Sleep(150);
+
+		if (beachMrc == EXIT) {
+			player->sectionID = EXIT_GAME;
+			break;
+		}
+
+		if (player->posX >= 25) {
+			player->sectionID = SECTION_TWO;
+			player->posX = 0;
+			player->bg = BG_GRASS;
 			break;
 		}
 	}

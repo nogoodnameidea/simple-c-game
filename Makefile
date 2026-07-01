@@ -6,4 +6,4 @@ main:
 	$(CC) -o main main.c -lwinmm
 
 clean:
-	rm main.exe
+	rm *.exe

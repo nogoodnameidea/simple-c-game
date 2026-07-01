@@ -1,7 +1,10 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <Windows.h>
 #include <mmsystem.h>
+
+#define GAME_CLOCK_LOOP for (*quarterSecondCounter; *quarterSecondCounter < 1000; *quarterSecondCounter += 1)
+#define X_LOOP for (j = 0; j < 25; j++)
+#define Y_LOOP for (i; i < 10; i++)
 
 typedef enum {
 	CONTINUE,
@@ -9,11 +12,11 @@ typedef enum {
 } MovementReturnCode;
 
 typedef enum {
-	SECTION_ZERO,
 	SECTION_ONE,
 	SECTION_TWO,
 	SECTION_THREE,
 	SECTION_FOUR,
+	SECTION_FIVE,
 	EXIT_GAME
 } SectionID;
 
@@ -40,9 +43,12 @@ typedef struct {
 
 void drawTopUI(HANDLE stdOutHandle, int time);
 void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg);
+void drawMap(HANDLE stdOutHandle, int posX, int posY, Tank *player, int bgColor, char *tileCharacter);
+
 MovementReturnCode movement(Tank *player, int maxX, int minX, int maxY, int minY);
 
-void sectionZero(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
+void sectionOne(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
+void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
 
 int main() {
 	HANDLE stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -54,28 +60,31 @@ int main() {
 		.posY = 9,
 		.dir = DIR_UP,
 		.bg = BG_CONCRETE,
-		.sectionID = SECTION_ZERO,
+		.sectionID = SECTION_ONE,
 	};
-
-	system("cls");
-	SetConsoleTextAttribute(stdOutHandle, 0x07);
-	printf("Use o zoom para uma melhor experiência");
-	Sleep(2000);
-	system("cls");
-
 
 	int quarterSecondCounter = 0;
 	int seconds = 0;
 
+	int isRunning = 1;
+
 	PlaySound("audio/music.wav", NULL, SND_FILENAME | SND_ASYNC);
 
-	switch (player.sectionID) {
-		case SECTION_ZERO:
-			sectionZero(&player, stdOutHandle, &quarterSecondCounter, &seconds);
-			break;
+	system("cls");
+	while (isRunning == 1) {
+		switch (player.sectionID) {
+			case SECTION_ONE:
+				sectionOne(&player, stdOutHandle, &quarterSecondCounter, &seconds);
+				break;
+			case SECTION_TWO:
+				sectionTwo(&player, stdOutHandle, &quarterSecondCounter, &seconds);
+				break;
+			case EXIT_GAME:
+				isRunning = 0;
+				break;
+		}
 	}
 
-	printf("%d", seconds);
 	return 0;
 }
 
@@ -147,49 +156,13 @@ void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg) {
 	}
 }
 
-void sectionZero(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds) {
-	for (*quarterSecondCounter; *quarterSecondCounter < 1000; *quarterSecondCounter += 1) {
-		COORD redrawPosition = {0,0};
-		SetConsoleCursorPosition(stdOutHandle, redrawPosition);
-
-		int i = 0;
-		int j = 0;
-
-
-		drawTopUI(stdOutHandle, *seconds);
-
-		for (i; i < 10; i++) {
-			for (j = 0; j < 25; j++) {
-				SetConsoleTextAttribute(stdOutHandle, 0x87);
+void drawMap(HANDLE stdOutHandle, int posX, int posY, Tank *player, int bgColor, char *tileCharacter) {
+	SetConsoleTextAttribute(stdOutHandle, bgColor);
 				
-				if (i == player->posY && j == player->posX) {
-					drawTank(stdOutHandle, player->dir, player->bg);
-				} else {
-					printf(" ");
-				}
-			}
-			SetConsoleTextAttribute(stdOutHandle, 0x07);
-			printf("\n");
-		}
-
-		if (*quarterSecondCounter > 4) {
-			*quarterSecondCounter = 0;
-			*seconds += 1;
-		}
-
-		MovementReturnCode mrc = movement(player, 1, 24, 8, -2);
-
-		Sleep(150);
-
-		if (mrc == EXIT) {
-			player->sectionID = EXIT_GAME;
-			break;
-		}
-
-		if (player->posY == -2) {
-			player->sectionID = SECTION_TWO;
-			break;
-		}
+	if (posX == player->posY && posY == player->posX) {
+		drawTank(stdOutHandle, player->dir, player->bg);
+	} else {
+		printf("%s", tileCharacter);
 	}
 }
 
@@ -223,6 +196,88 @@ MovementReturnCode movement(Tank *player, int maxX, int minX, int maxY, int minY
 		if (player->posX <= minX) {
 			player->posX++;
 			player->dir = DIR_RIGHT;
+		}
+	}
+}
+
+void sectionOne(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds) {
+	GAME_CLOCK_LOOP {
+		COORD redrawPosition = {0,0};
+		SetConsoleCursorPosition(stdOutHandle, redrawPosition);
+
+		int i = 0;
+		int j = 0;
+
+
+		drawTopUI(stdOutHandle, *seconds);
+
+		Y_LOOP {
+			X_LOOP {
+				drawMap(stdOutHandle, i, j, player, 0x87, " ");
+			}
+			SetConsoleTextAttribute(stdOutHandle, 0x07);
+			printf("\n");
+		}
+
+		if (*quarterSecondCounter > 4) {
+			*quarterSecondCounter = 0;
+			*seconds += 1;
+		}
+
+		MovementReturnCode mrc = movement(player, 1, 24, 8, -1);
+
+		Sleep(150);
+
+		if (mrc == EXIT) {
+			player->sectionID = EXIT_GAME;
+			break;
+		}
+
+		if (player->posY == -1) {
+			player->sectionID = SECTION_TWO;
+			player->posY = 9;
+			player->bg = BG_GRASS;
+			break;
+		}
+	}
+}
+
+void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds) {
+	GAME_CLOCK_LOOP {
+		COORD redrawPosition = {0,0};
+		SetConsoleCursorPosition(stdOutHandle, redrawPosition);
+
+		int i = 0;
+		int j = 0;
+
+
+		drawTopUI(stdOutHandle, *seconds);
+
+		Y_LOOP {
+			X_LOOP {
+				drawMap(stdOutHandle, i, j, player, 0x2A, ",");
+			}
+			SetConsoleTextAttribute(stdOutHandle, 0x07);
+			printf("\n");
+		}
+
+		if (*quarterSecondCounter > 4) {
+			*quarterSecondCounter = 0;
+			*seconds += 1;
+		}
+
+		MovementReturnCode mrc = movement(player, 1, 24, 8, -2);
+
+		Sleep(150);
+
+		if (mrc == EXIT) {
+			player->sectionID = EXIT_GAME;
+			break;
+		}
+
+		if (player->posY == -2) {
+			player->sectionID = SECTION_THREE;
+			break;
 		}
 	}
 }

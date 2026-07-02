@@ -2,57 +2,9 @@
 #include <Windows.h>
 #include <mmsystem.h>
 
-#define GAME_CLOCK_LOOP for (*quarterSecondCounter; *quarterSecondCounter < 1000; *quarterSecondCounter += 1)
-#define X_LOOP for (j = 0; j < 25; j++)
-#define Y_LOOP for (i; i < 10; i++)
-
-#define QUIT_GAME_KEY_PRESSED GetAsyncKeyState('Q') & 0b1
-#define MOVE_UP_KEY_PRESSED (GetAsyncKeyState(VK_UP) & 0b1) || (GetAsyncKeyState('W') & 0b1)
-#define MOVE_DOWN_KEY_PRESSED (GetAsyncKeyState(VK_DOWN) & 0b1) || (GetAsyncKeyState('S') & 0b1)
-#define MOVE_LEFT_KEY_PRESSED (GetAsyncKeyState(VK_LEFT) & 0b1) || (GetAsyncKeyState('A') & 0b1)
-#define MOVE_RIGHT_KEY_PRESSED (GetAsyncKeyState(VK_RIGHT) & 0b1) || (GetAsyncKeyState('D') & 0b1)
-
-typedef enum {
-	CONTINUE,
-	EXIT
-} MovementReturnCode;
-
-typedef enum {
-	SECTION_ONE,
-	SECTION_TWO,
-	SECTION_THREE,
-	SECTION_FOUR,
-	SECTION_FIVE,
-	EXIT_GAME
-} SectionID;
-
-typedef enum {
-	DIR_UP,
-	DIR_LEFT,
-	DIR_RIGHT,
-	DIR_DOWN
-} TankDirection;
-
-typedef enum {
-	BG_GRASS,
-	BG_SAND,
-	BG_CONCRETE
-} TankBackground;
-
-typedef struct {
-	int posX;
-	int posY;
-	TankDirection dir;
-	TankBackground bg;
-	SectionID currentSection;
-} Tank;
-
-typedef struct {
-	int logPosX;
-	int logPosY;
-	int leafPosX;
-	int leafPosY;
-} Tree;
+#include "game_logic/enums.h"
+#include "game_logic/structs.h"
+#include "game_logic/macros.h"
 
 void drawTopUI(HANDLE stdOutHandle, int time);
 void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg);

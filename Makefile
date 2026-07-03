@@ -3,7 +3,7 @@ CC = gcc
 all: main
 
 main:
-	$(CC) -o main main.c -lwinmm
+	$(CC) -o main main.c game_logic/movement.c graphics/graphics.c -lwinmm
 
 clean:
 	rm *.exe

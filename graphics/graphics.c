@@ -99,9 +99,13 @@ void drawForestMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, 
 				
 	if (mapPosX == player->posY && mapPosY == player->posX) {
 		drawTank(stdOutHandle, player->dir, player->bg);
+	} else if (mapPosX == trees[0].logPosX && mapPosY == trees[0].logPosY) {
+
 	} else {
 		printf(",");
 	}
+
+
 
 	// TODO: Add trees
 }

@@ -12,14 +12,14 @@ void sectionOne(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 		COORD redrawPosition = {0,0};
 		SetConsoleCursorPosition(stdOutHandle, redrawPosition);
 
-		int i = 0;
-		int j = 0;
+		int x = 0;
+		int y = 0;
 
 		drawTopUI(stdOutHandle, *seconds);
 
 		Y_LOOP {
 			X_LOOP {
-				drawMap(stdOutHandle, i, j, player, 0x87, " ");
+				drawMap(stdOutHandle, x, y, player, 0x87, " ");
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
 			printf("\n");
@@ -53,15 +53,15 @@ void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 		COORD redrawPosition = {0,0};
 		SetConsoleCursorPosition(stdOutHandle, redrawPosition);
 
-		int i = 0;
-		int j = 0;
+		int x = 0;
+		int y = 0;
 
 
 		drawTopUI(stdOutHandle, *seconds);
 
 		Y_LOOP {
 			X_LOOP {	
-				drawMap(stdOutHandle, i, j, player, 0x2A, ",");
+				drawMap(stdOutHandle, x, y, player, 0x2A, ",");
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
 			printf("\n");
@@ -109,8 +109,8 @@ void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, 
 		COORD redrawPosition = {0,0};
 		SetConsoleCursorPosition(stdOutHandle, redrawPosition);
 
-		int i = 0;
-		int j = 0;
+		int x = 0;
+		int y = 0;
 
 		int waterLevel = 0;
 
@@ -118,7 +118,7 @@ void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, 
 
 		Y_LOOP {
 			X_LOOP {
-				drawBeachMap(stdOutHandle, i, j, player, 0x6e, waterLevel, ".");
+				drawBeachMap(stdOutHandle, x, y, player, 0x6e, waterLevel, ".");
 				waterLevel++;
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
@@ -151,18 +151,25 @@ void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, 
 }
 
 void sectionFour(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds) {
+	Tree trees[5] = {
+		{ .logPosX = 4, .logPosY = 4, .leafPosX = 4, .leafPosX = 3,},
+		{ .logPosX = 4, .logPosY = 4, .leafPosX = 4, .leafPosX = 3,}, // Test data
+		{ .logPosX = 4, .logPosY = 4, .leafPosX = 4, .leafPosX = 3,},
+		{ .logPosX = 4, .logPosY = 4, .leafPosX = 4, .leafPosX = 3,}
+	};
+
 	GAME_CLOCK_LOOP {
 		COORD redrawPosition = {0,0};
 		SetConsoleCursorPosition(stdOutHandle, redrawPosition);
 
-		int i = 0;
-		int j = 0;
+		int x = 0;
+		int y = 0;
 
 		drawTopUI(stdOutHandle, *seconds);
 
 		Y_LOOP {
 			X_LOOP {
-				drawMap(stdOutHandle, i, j, player, 0x2A, ",");
+				drawForestMap(stdOutHandle, x, y, player, 0x2A, trees);
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
 			printf("\n");

@@ -4,8 +4,8 @@
 #include <Windows.h>
 
 #define GAME_CLOCK_LOOP for (*quarterSecondCounter; *quarterSecondCounter < 1000; *quarterSecondCounter += 1)
-#define X_LOOP for (j = 0; j < 25; j++)
-#define Y_LOOP for (i; i < 10; i++)
+#define X_LOOP for (y = 0; y < 25; y++)
+#define Y_LOOP for (x; x < 10; x++)
 
 #define QUIT_GAME_KEY_PRESSED GetAsyncKeyState('Q') & 0b1
 #define MOVE_UP_KEY_PRESSED (GetAsyncKeyState(VK_UP) & 0b1) || (GetAsyncKeyState('W') & 0b1)

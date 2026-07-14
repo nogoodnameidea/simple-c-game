@@ -85,7 +85,7 @@ void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, i
 
 	int waterLeveLimit = 11;
 
-	if (mapPosX == player->posY && mapPosY == player->posX) {
+	if (mapPosX == player->posX && mapPosY == player->posY) {
 		drawTank(stdOutHandle, player->dir, player->bg);
 	} else if (waterLevel < waterLeveLimit) {
 		SetConsoleTextAttribute(stdOutHandle, 0x19);
@@ -98,7 +98,7 @@ void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, i
 void drawForestMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor, Tree trees[5]) {
 	SetConsoleTextAttribute(stdOutHandle, bgColor);
 				
-	if (mapPosX == player->posY && mapPosY == player->posX) {
+	if (mapPosX == player->posX && mapPosY == player->posY) {
 		drawTank(stdOutHandle, player->dir, player->bg);
 	} else if (mapPosX == 8 && mapPosY == 8) {
 		SetConsoleTextAttribute(stdOutHandle, 0x2e);

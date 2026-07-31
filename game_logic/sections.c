@@ -132,7 +132,7 @@ void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, 
 			*seconds += 1;
 		}
 
-		MovementReturnCode beachMrc = beachMovement(player, 1, 25, 8, -1);
+		MovementReturnCode beachMrc = beachMovement(player, 1, 25, 8, 1);
 
 		Sleep(150);
 
@@ -173,7 +173,7 @@ void sectionFour(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, i
 			*seconds += 1;
 		}
 
-		MovementReturnCode mrc = movement(player, 1, 24, 8, -1);
+		MovementReturnCode mrc = forestMovement(player, 0, 24, 8, 1);
 
 		Sleep(150);
 

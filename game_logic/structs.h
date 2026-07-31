@@ -12,4 +12,11 @@ typedef struct {
 	int hasKey;
 } Tank;
 
+typedef struct {
+	int posX;
+	int posY;
+} Object;
+
+extern Object key;
+
 #endif

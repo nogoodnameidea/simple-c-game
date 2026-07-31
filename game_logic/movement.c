@@ -1,6 +1,7 @@
 #include "enums.h"
 #include "macros.h"
 #include "movement.h"
+#include <stdio.h>
 
 MovementReturnCode movement(Tank *player, int maxX, int minX, int maxY, int minY) {
 	if (QUIT_GAME_KEY_PRESSED) {
@@ -62,7 +63,7 @@ MovementReturnCode beachMovement(Tank *player, int maxX, int minX, int maxY, int
 		}
 	}
 
-	if ((MOVE_RIGHT_KEY_PRESSED)) {
+	if (MOVE_RIGHT_KEY_PRESSED) {
 		if (player->posX <= minX) {
 			player->posX++;
 			player->dir = DIR_RIGHT;
@@ -74,6 +75,8 @@ MovementReturnCode forestMovement(Tank *player, int maxX, int minX, int maxY, in
 	if (QUIT_GAME_KEY_PRESSED) {
 		return EXIT;
 	}
+
+	Object key = {.posX = 12, .posY = 5};
 		
 	if (MOVE_UP_KEY_PRESSED) {
 		if (player->posY >= minY) {
@@ -101,5 +104,9 @@ MovementReturnCode forestMovement(Tank *player, int maxX, int minX, int maxY, in
 			player->posX++;
 			player->dir = DIR_RIGHT;
 		}
+	}
+
+	if (player->posX == key.posX && player->posY == key.posY) {
+		player->hasKey = 1;
 	}
 }

@@ -86,10 +86,11 @@ void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, i
 
 void drawForestMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor) {
 	SetConsoleTextAttribute(stdOutHandle, bgColor);
-				
+	Object key = {.posX = 12, .posY = 5};
+	
 	if (mapPosX == player->posX && mapPosY == player->posY) {
 		drawTank(stdOutHandle, player->dir, player->bg);
-	} else if (mapPosX == 12 && mapPosY == 5) {
+	} else if ((mapPosX == key.posX && mapPosY == key.posY) && (player->hasKey == 0)) {
 		SetConsoleTextAttribute(stdOutHandle, 0x2e);
 		printf("T");
 	} else {

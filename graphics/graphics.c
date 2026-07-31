@@ -107,3 +107,14 @@ void drawForestMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, 
 		printf(",");
 	}
 }
+
+void drawGateMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor, char *tileCharacter) {
+	SetConsoleTextAttribute(stdOutHandle, bgColor);
+				
+	if (mapPosX == player->posX && mapPosY == player->posY) {
+		drawTank(stdOutHandle, player->dir, player->bg);
+	} else {
+		printf("%s", tileCharacter);
+	}
+
+}

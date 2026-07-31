@@ -95,17 +95,15 @@ void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, i
 	}
 }
 
-void drawForestMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor, Tree trees[5]) {
+void drawForestMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor) {
 	SetConsoleTextAttribute(stdOutHandle, bgColor);
 				
 	if (mapPosX == player->posX && mapPosY == player->posY) {
 		drawTank(stdOutHandle, player->dir, player->bg);
-	} else if (mapPosX == 8 && mapPosY == 8) {
+	} else if (mapPosX == 12 && mapPosY == 5) {
 		SetConsoleTextAttribute(stdOutHandle, 0x2e);
 		printf("T");
 	} else {
 		printf(",");
 	}
-
-	// TODO: Add trees
 }

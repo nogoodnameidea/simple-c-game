@@ -151,12 +151,14 @@ void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, 
 }
 
 void sectionFour(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds) {
+	/*
 	Tree trees[5] = {
-		{ .logPosX = 4, .logPosY = 4, .leafPosX = 4, .leafPosX = 3,},
-		{ .logPosX = 4, .logPosY = 4, .leafPosX = 4, .leafPosX = 3,}, // Test data
-		{ .logPosX = 4, .logPosY = 4, .leafPosX = 4, .leafPosX = 3,},
-		{ .logPosX = 4, .logPosY = 4, .leafPosX = 4, .leafPosX = 3,}
-	};
+		{ .logPosX = 4, .logPosY = 4, .leafPosX = 4, .leafPosY = 3},
+		{ .logPosX = 20, .logPosY = 4, .leafPosX = 20, .leafPosY = 3}, // Test data
+		{ .logPosX = 4, .logPosY = 8, .leafPosX = 4, .leafPosY = 7},
+		{ .logPosX = 20, .logPosY = 8, .leafPosX = 20, .leafPosY = 7},
+		{ .logPosX = 12, .logPosY = 6, .leafPosX = 12, .leafPosY = 5}
+	};*/
 
 	GAME_CLOCK_LOOP {
 		COORD redrawPosition = {0,0};
@@ -169,7 +171,8 @@ void sectionFour(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, i
 
 		Y_LOOP {
 			X_LOOP {
-				drawForestMap(stdOutHandle, x, y, player, 0x2A, trees);
+				drawForestMap(stdOutHandle, x, y, player, 0x2A);
+				//drawTrees(stdOutHandle, trees, 5);
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
 			printf("\n");

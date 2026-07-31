@@ -21,6 +21,7 @@ int main() {
 		.dir = DIR_UP,
 		.bg = BG_CONCRETE,
 		.currentSection = SECTION_ONE,
+		.hasKey = 0,
 	};
 
 	int quarterSecondCounter = 0;

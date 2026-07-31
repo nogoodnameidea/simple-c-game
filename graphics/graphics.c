@@ -1,44 +1,33 @@
 #include <stdio.h>
 #include "graphics.h"
 
-void drawTopUI(HANDLE stdOutHandle, int time) {
+void drawTopUIHorizontalLine();
+void drawTopUIVerticalPiece();
+void printTopUISpaces(int spacesNum);
+
+void drawTopUI(HANDLE stdOutHandle, int time, Tank player) {
 		SetConsoleTextAttribute(stdOutHandle, 0x07);
 
-		printf("+");
-		for (int i = 0; i < 23; i++) {
-			printf("-");
-		}	
-		printf("+\n");
+		drawTopUIHorizontalLine();
+		drawTopUIVerticalPiece();
+		drawTopUIVerticalPiece();
 
 		printf("|");
-		for (int i = 0; i < 23; i++) {
-			printf(" ");
-		}
-		printf("|\n");
-
-		printf("|");
-		for (int i = 0; i < 23; i++) {
-			printf(" ");
-		}
-		printf("|\n");
-
-		printf("|");
-		for (int i = 0; i < 6; i++) {
-			printf(" ");
-		}	
+		printTopUISpaces(6);
 
 		printf("Time: %.4d", time);
 
-		for (int i = 0; i < 7; i++) {
+		printTopUISpaces(3);
+		if (player.hasKey == 1) {
+			printf("T");
+		} else {
 			printf(" ");
-		}	
-		printf("|\n");
-
-		printf("+");
-		for (int i = 0; i < 23; i++) {
-			printf("-");
 		}
-		printf("+\n");
+		printTopUISpaces(3);
+
+		printf("|\n");
+		
+		drawTopUIHorizontalLine();
 }
 
 void drawTank(HANDLE stdOutHandle, TankDirection tDir, TankBackground tBg) {
@@ -117,4 +106,26 @@ void drawGateMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, in
 		printf("%s", tileCharacter);
 	}
 
+}
+
+void drawTopUIHorizontalLine() {
+	printf("+");
+	for (int i = 0; i < 23; i++) {
+		printf("-");
+	}	
+	printf("+\n");
+}
+
+void drawTopUIVerticalPiece() {
+	printf("|");
+	for (int i = 0; i < 23; i++) {
+		printf(" ");
+	}
+	printf("|\n");
+}
+
+void printTopUISpaces(int spacesNum) {
+	for (int i = 0; i < spacesNum; i++) {
+		printf(" ");
+	}
 }

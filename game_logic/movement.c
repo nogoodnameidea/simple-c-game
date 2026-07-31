@@ -102,6 +102,4 @@ MovementReturnCode forestMovement(Tank *player, int maxX, int minX, int maxY, in
 			player->dir = DIR_RIGHT;
 		}
 	}
-
-	// TODO: Tree colision
 }

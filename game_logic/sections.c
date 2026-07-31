@@ -15,7 +15,7 @@ void sectionOne(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 		int x = 0;
 		int y = 0;
 
-		drawTopUI(stdOutHandle, *seconds);
+		drawTopUI(stdOutHandle, *seconds, *player);
 
 		Y_LOOP {
 			X_LOOP {
@@ -57,7 +57,7 @@ void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 		int y = 0;
 
 
-		drawTopUI(stdOutHandle, *seconds);
+		drawTopUI(stdOutHandle, *seconds, *player);
 
 		Y_LOOP {
 			X_LOOP {	
@@ -114,7 +114,7 @@ void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, 
 
 		int waterLevel = 0;
 
-		drawTopUI(stdOutHandle, *seconds);
+		drawTopUI(stdOutHandle, *seconds, *player);
 
 		Y_LOOP {
 			X_LOOP {
@@ -158,7 +158,7 @@ void sectionFour(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, i
 		int x = 0;
 		int y = 0;
 
-		drawTopUI(stdOutHandle, *seconds);
+		drawTopUI(stdOutHandle, *seconds, *player);
 
 		Y_LOOP {
 			X_LOOP {
@@ -198,11 +198,11 @@ void sectionFive(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, i
 		int x = 0;
 		int y = 0;
 
-		drawTopUI(stdOutHandle, *seconds);
+		drawTopUI(stdOutHandle, *seconds, *player);
 
 		Y_LOOP {
 			X_LOOP {
-				drawGateMap(stdOutHandle, x, y, player, 0x2A);
+				drawGateMap(stdOutHandle, x, y, player, 0x2A, ",");
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
 			printf("\n");

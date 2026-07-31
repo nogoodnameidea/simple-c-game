@@ -9,13 +9,7 @@ typedef struct {
 	TankDirection dir;
 	TankBackground bg;
 	SectionID currentSection;
+	int hasKey;
 } Tank;
-
-typedef struct {
-	int logPosX;
-	int logPosY;
-	int leafPosX;
-	int leafPosY;
-} Tree;
 
 #endif

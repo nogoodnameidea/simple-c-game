@@ -1,6 +1,4 @@
-#include <stdio.h>
 #include <Windows.h>
-#include <mmsystem.h>
 
 #include "game_logic/enums.h"
 #include "game_logic/macros.h"
@@ -9,6 +7,8 @@
 #include "game_logic/structs.h"
 
 #include "graphics/graphics.h"
+
+#include "audio/music.h"
 
 int main() {
 	HANDLE stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -29,7 +29,7 @@ int main() {
 
 	int isRunning = 1;
 
-	PlaySound("audio/music.wav", NULL, SND_FILENAME | SND_ASYNC);
+	HANDLE musicThread = CreateThread(NULL, 0, music_player, NULL, 0, NULL);
 
 	system("cls");
 	while (isRunning == 1) {
@@ -48,6 +48,8 @@ int main() {
 				break;
 			default:
 				isRunning = 0;
+				CloseHandle(stdOutHandle);
+				CloseHandle(musicThread);
 				break;
 		}
 	}

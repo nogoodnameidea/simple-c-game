@@ -69,7 +69,7 @@ void drawMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bg
 
 }
 
-void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor, int waterLevel, char *tileCharacter) {
+void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int waterLevel) {
 	SetConsoleTextAttribute(stdOutHandle, bgColor);
 
 	int waterLeveLimit = 11;
@@ -80,7 +80,7 @@ void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, i
 		SetConsoleTextAttribute(stdOutHandle, 0x19);
 		printf("~");
 	} else { 
-		printf("%s", tileCharacter); 
+		printf("."); 
 	}
 }
 
@@ -98,13 +98,13 @@ void drawForestMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, 
 	}
 }
 
-void drawGateMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor, char *tileCharacter) {
+void drawGateMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor) {
 	SetConsoleTextAttribute(stdOutHandle, bgColor);
 				
 	if (mapPosX == player->posX && mapPosY == player->posY) {
 		drawTank(stdOutHandle, player->dir, player->bg);
 	} else {
-		printf("%s", tileCharacter);
+		printf(",");
 	}
 
 }

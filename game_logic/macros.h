@@ -3,7 +3,7 @@
 
 #include <Windows.h>
 
-#define GAME_CLOCK_LOOP for (*quarterSecondCounter; *quarterSecondCounter < 1000; *quarterSecondCounter += 1)
+#define GAME_CLOCK_LOOP for (*quarterSecondCounter; *quarterSecondCounter < 180; *quarterSecondCounter += 1)
 #define X_LOOP for (x = 0; x < 25; x++)
 #define Y_LOOP for (y; y < 10; y++)
 

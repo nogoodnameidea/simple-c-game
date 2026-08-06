@@ -118,7 +118,7 @@ void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, 
 
 		Y_LOOP {
 			X_LOOP {
-				drawBeachMap(stdOutHandle, x, y, player, 0x6e, waterLevel, ".");
+				drawBeachMap(stdOutHandle, x, y, player, waterLevel);
 				waterLevel++;
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
@@ -202,7 +202,7 @@ void sectionFive(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, i
 
 		Y_LOOP {
 			X_LOOP {
-				drawGateMap(stdOutHandle, x, y, player, 0x2A, ",");
+				drawGateMap(stdOutHandle, x, y, player, 0x2A);
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
 			printf("\n");

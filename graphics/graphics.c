@@ -70,7 +70,7 @@ void drawMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bg
 }
 
 void drawBeachMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int waterLevel) {
-	SetConsoleTextAttribute(stdOutHandle, bgColor);
+	SetConsoleTextAttribute(stdOutHandle, 0x6e);
 
 	int waterLeveLimit = 11;
 

@@ -13,4 +13,9 @@
 #define MOVE_LEFT_KEY_PRESSED (GetAsyncKeyState(VK_LEFT) & 0b1) || (GetAsyncKeyState('A') & 0b1)
 #define MOVE_RIGHT_KEY_PRESSED (GetAsyncKeyState(VK_RIGHT) & 0b1) || (GetAsyncKeyState('D') & 0b1)
 
+// Audio related variables
+#define CHUNK_SIZE 2000
+#define TWO_PI (3.14159265359 + 3.14159265359)
+#define SAMPLE_RATE 44100
+
 #endif

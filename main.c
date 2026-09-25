@@ -49,6 +49,8 @@ int main() {
 			case SECTION_FIVE:
 				sectionFive(&player, stdOutHandle, &quarterSecondCounter, &seconds);
 				break;
+			case END_GAME:
+				endGameText(&player);
 			default:
 				isRunning = 0;
 				CloseHandle(stdOutHandle);

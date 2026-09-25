@@ -10,5 +10,6 @@ void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 void sectionThree(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
 void sectionFour(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
 void sectionFive(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, int *seconds);
+void endGameText(Tank *player);
 
 #endif

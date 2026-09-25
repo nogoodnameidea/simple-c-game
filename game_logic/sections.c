@@ -236,3 +236,15 @@ void sectionFive(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, i
 		}
 	}
 }
+
+void endGameText(Tank *player) {
+	printf("Você venceu o jogo! Obrigado por jogar meu jogo, ele é bem simples mas me levou um bom tempo para fazer!\n");
+	printf("(Aperte a tecla de espaço para sair)");
+
+	while (1) {
+		if (GetAsyncKeyState(VK_SPACE) & 0b1) {
+			player->currentSection = EXIT_GAME;
+			break;
+		}
+	}
+}

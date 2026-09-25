@@ -6,5 +6,6 @@
 MovementReturnCode movement(Tank *player, int maxX, int minX, int maxY, int minY);
 MovementReturnCode beachMovement(Tank *player, int maxX, int minX, int maxY, int minY);
 MovementReturnCode forestMovement(Tank *player, int maxX, int minX, int maxY, int minY);
+MovementReturnCode gateMovement(Tank *player, int maxX, int minX, int maxY, int minY);
 
 #endif

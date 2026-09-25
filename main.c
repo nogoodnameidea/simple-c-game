@@ -46,6 +46,9 @@ int main() {
 			case SECTION_FOUR:
 				sectionFour(&player, stdOutHandle, &quarterSecondCounter, &seconds);
 				break;
+			case SECTION_FIVE:
+				sectionFive(&player, stdOutHandle, &quarterSecondCounter, &seconds);
+				break;
 			default:
 				isRunning = 0;
 				CloseHandle(stdOutHandle);

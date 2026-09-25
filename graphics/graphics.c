@@ -98,11 +98,22 @@ void drawForestMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, 
 	}
 }
 
-void drawGateMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player, int bgColor) {
-	SetConsoleTextAttribute(stdOutHandle, bgColor);
+void drawGateMap(HANDLE stdOutHandle, int mapPosX, int mapPosY, Tank *player) {
+	SetConsoleTextAttribute(stdOutHandle, 0x2A);
+
+	int wallandGateVerticalEndPoint = 6;
+	int gateVerticalStartPoint = 2;
+	int gateHorizontalStartPoint = 9;
+	int gateHorizontalEndPoint = 13;
 				
 	if (mapPosX == player->posX && mapPosY == player->posY) {
 		drawTank(stdOutHandle, player->dir, player->bg);
+	} else if (mapPosY >= gateVerticalStartPoint && mapPosY <= wallandGateVerticalEndPoint && mapPosX >= gateHorizontalStartPoint && mapPosX <= gateHorizontalEndPoint) {
+		SetConsoleTextAttribute(stdOutHandle, 0x6e);
+		printf("-");
+	} else if (mapPosY <= wallandGateVerticalEndPoint) {
+		SetConsoleTextAttribute(stdOutHandle, 0x87);
+		printf(" ");
 	} else {
 		printf(",");
 	}

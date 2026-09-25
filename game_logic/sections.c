@@ -94,6 +94,7 @@ void sectionTwo(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, in
 
 		if (player->posY <= -1) {
 			player->currentSection = SECTION_FIVE;
+			player->posY = 8;
 			break;
 		} else if (player->posY >= 10) {
 			player->currentSection = SECTION_ONE;
@@ -186,7 +187,7 @@ void sectionFour(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, i
 			player->currentSection = SECTION_TWO;
 			player->posX = 24;
 			break;
-		} 
+		}
 	}
 }
 
@@ -202,7 +203,7 @@ void sectionFive(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, i
 
 		Y_LOOP {
 			X_LOOP {
-				drawGateMap(stdOutHandle, x, y, player, 0x2A);
+				drawGateMap(stdOutHandle, x, y, player);
 			}
 			SetConsoleTextAttribute(stdOutHandle, 0x07);
 			printf("\n");
@@ -213,12 +214,24 @@ void sectionFive(Tank *player, HANDLE stdOutHandle, int *quarterSecondCounter, i
 			*seconds += 1;
 		}
 
-		MovementReturnCode mrc = movement(player, 1, 24, 9, 0);
+		MovementReturnCode mrc = gateMovement(player, 1, 24, 9, 0);
 
 		Sleep(150);
 
 		if (mrc == EXIT) {
 			player->currentSection = EXIT_GAME;
+			break;
+		}
+
+		if (player->posY >= 10) {
+			player->currentSection = SECTION_TWO;
+			player->posY = 0;
+			player->bg = BG_GRASS;
+			break;
+		}
+
+		if (player->posY <= 6) {
+			player->currentSection = END_GAME;
 			break;
 		}
 	}

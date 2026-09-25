@@ -31,9 +31,6 @@ AudioClip parseWav(uint8_t *fileBytes, uint32_t fileSize) {
                 printf("FORMATO NÃO SUPORTADO!\n");
                 return result;
             }
-            if (chunk->cb == 16 || chunk->cb == 18) printf("chunk->cb ok\n");
-            if (fmt->nBlockAlign == fmt->nChannels * fmt->wBitsPerSample / 8) printf("fmt->nBlockAlign == fmt->nChannels * fmt->wBitsPerSample / 8 ok\n");
-            if (fmt->nAvgBytesPerSec == fmt->nSamplesPerSec * fmt->nBlockAlign) printf("fmt->nAvgBytesPerSec == fmt->nSamplesPerSec * fmt->nBlockAlign ok\n");
 
             result.numChannels = fmt->nChannels;
             result.sampleRate = fmt->nSamplesPerSec;
@@ -43,7 +40,6 @@ AudioClip parseWav(uint8_t *fileBytes, uint32_t fileSize) {
         {
             result.numSamples = chunk->cb / sizeof(uint16_t);
             result.samples = ((uint8_t*)chunk + sizeof(RIFFCHUNK));
-            if ((uint8_t*)result.samples + chunk->cb - 1 < endOfFile) printf("(uint8_t*)result.samples + chunk->cb - 1 < endOfFile ok\n");
         }
     }
     return result;

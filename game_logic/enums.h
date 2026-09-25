@@ -12,7 +12,8 @@ typedef enum {
 	SECTION_THREE,
 	SECTION_FOUR,
 	SECTION_FIVE,
-	EXIT_GAME
+	EXIT_GAME,
+	END_GAME
 } SectionID;
 
 typedef enum {
